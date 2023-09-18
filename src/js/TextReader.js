@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 function TTS() {
   const [text, setText] = useState('');
   const [speed, setSpeed] = useState(1); // Default speed is 1
+  const [volume, setVolume] = useState(1); // Default volume is 1
   const [speaking, setSpeaking] = useState(false); // Track whether speech is in progress
   const [voices, setVoices] = useState([]); // Available speech synthesis voices
   const [selectedVoice, setSelectedVoice] = useState(null); // Currently selected voice
@@ -29,6 +30,7 @@ function TTS() {
     if (!speaking) {
       utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = speed; // Set the speech rate based on the selected speed
+      utterance.volume = volume; // Set the speech volume
       if (selectedVoice) {
         utterance.voice = selectedVoice; // Set the selected voice
       }
@@ -75,6 +77,22 @@ function TTS() {
           <option value="1">1x (Normal)</option>
           <option value="1.5">1.5x</option>
           <option value="2">2x</option>
+        </select>
+      </div>
+      <div className="select">
+        <label htmlFor="volume">Select Volume:</label>
+        <select
+          id="volume"
+          className="volume-select"
+          value={volume}
+          onChange={(e) => setVolume(parseFloat(e.target.value))}
+        >
+          <option value="0">0</option>
+          <option value="0.2">0.2</option>
+          <option value="0.4">0.4</option>
+          <option value="0.6">0.6</option>
+          <option value="0.8">0.8</option>
+          <option value="1">1 (Max)</option>
         </select>
       </div>
       <div className="select">
