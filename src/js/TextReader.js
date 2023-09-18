@@ -4,6 +4,7 @@ function TTS() {
   const [text, setText] = useState('');
   const [speed, setSpeed] = useState(1); // Default speed is 1
   const [volume, setVolume] = useState(1); // Default volume is 1
+  const [pitch, setPitch] = useState(1); // Default pitch is 1
   const [speaking, setSpeaking] = useState(false); // Track whether speech is in progress
   const [voices, setVoices] = useState([]); // Available speech synthesis voices
   const [selectedVoice, setSelectedVoice] = useState(null); // Currently selected voice
@@ -31,6 +32,7 @@ function TTS() {
       utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = speed; // Set the speech rate based on the selected speed
       utterance.volume = volume; // Set the speech volume
+      utterance.pitch = pitch; // Set the speech pitch
       if (selectedVoice) {
         utterance.voice = selectedVoice; // Set the selected voice
       }
@@ -93,6 +95,21 @@ function TTS() {
           <option value="0.6">0.6</option>
           <option value="0.8">0.8</option>
           <option value="1">1 (Max)</option>
+        </select>
+      </div>
+      <div className="select">
+        <label htmlFor="pitch">Select Pitch:</label>
+        <select
+          id="pitch"
+          className="pitch-select"
+          value={pitch}
+          onChange={(e) => setPitch(parseFloat(e.target.value))}
+        >
+          <option value="0.5">0.5</option>
+          <option value="0.75">0.75</option>
+          <option value="1">1 (Normal)</option>
+          <option value="1.25">1.25</option>
+          <option value="1.5">1.5</option>
         </select>
       </div>
       <div className="select">
