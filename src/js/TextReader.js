@@ -6,6 +6,7 @@ function TTS() {
   const [volume, setVolume] = useState(1); // Default volume is 1
   const [pitch, setPitch] = useState(1); // Default pitch is 1
   const [speaking, setSpeaking] = useState(false); // Track whether speech is in progress
+  const [paused, setPaused] = useState(false); // Track whether speech is paused
   const [voices, setVoices] = useState([]); // Available speech synthesis voices
   const [selectedVoice, setSelectedVoice] = useState(null); // Currently selected voice
   
@@ -28,7 +29,7 @@ function TTS() {
   }, []);
   
   const handleSpeak = () => {
-    if (!speaking) {
+    if (!speaking && !paused) {
       utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = speed; // Set the speech rate based on the selected speed
       utterance.volume = volume; // Set the speech volume
@@ -41,13 +42,27 @@ function TTS() {
       };
       speechSynthesis.speak(utterance);
       setSpeaking(true); // Set speaking to true
+    } else if (paused) {
+      // Resume speech
+      speechSynthesis.resume();
+      setPaused(false);
+    }
+  };
+  
+  const handlePause = () => {
+    if (speaking && !paused) {
+      // Pause speech
+      speechSynthesis.pause();
+      setPaused(true);
     }
   };
   
   const handleStop = () => {
     if (speaking) {
-      speechSynthesis.cancel(); // Stop the speech synthesis
-      setSpeaking(false); // Set speaking to false
+      // Stop the speech synthesis
+      speechSynthesis.cancel();
+      setSpeaking(false);
+      setPaused(false);
     }
   };
   
@@ -130,6 +145,9 @@ function TTS() {
       <div className="button-container">
         <button className="button" onClick={handleSpeak}>
           Speak
+        </button>
+        <button className="button" onClick={handlePause}>
+          {paused ? 'Resume' : 'Pause'}
         </button>
         <button className="button stop-button" onClick={handleStop}>
           Stop
